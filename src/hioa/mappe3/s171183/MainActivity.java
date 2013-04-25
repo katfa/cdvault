@@ -22,14 +22,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-	HashMap<String,String> results = new HashMap<String, String>();
-	Drawable albumArt;
-	ArrayList<TreeMap<?, String>> albumDetails =  new ArrayList<TreeMap<?,String>>();
+	private HashMap<String,String> results = new HashMap<String, String>();
+	private Drawable albumArt;
+	private ArrayList<TreeMap<?, String>> albumDetails =  new ArrayList<TreeMap<?,String>>();
 
+	private DBAdapter dbAdapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		dbAdapter = new DBAdapter(this);
+		dbAdapter.open();
+		
 
 		Button startScanner = (Button) findViewById(R.id.startScanner);
 		startScanner.setOnClickListener(new OnClickListener() {
@@ -55,6 +59,7 @@ public class MainActivity extends Activity {
 					fetchAlbumDetails(results.get("resourceURL"));
 					showAlbumDetails(albumDetails.get(0));
 					showTracks(albumDetails.get(1));
+					showSaveButton();
 					
 				} catch (InterruptedException e) {
 					Log.e("ERROR", e.getMessage());
@@ -65,6 +70,19 @@ public class MainActivity extends Activity {
 				}
 			} 
 		}
+	}
+	
+	private void showSaveButton(){
+		Button saveButton = (Button) findViewById(R.id.saveAlbum);
+		saveButton.setVisibility(View.VISIBLE);
+		saveButton.setText("Save to my collection");
+		saveButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// add artist, add album, add tracks
+			}
+		});
 	}
 	
 	private Drawable fetchAlbumArt(String url) throws InterruptedException, ExecutionException{
@@ -82,7 +100,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void showAlbumDetails(TreeMap<?, String> treeMap){
-		TextView t = (TextView)findViewById(R.id.upc);
+		TextView t = (TextView)findViewById(R.id.album);
 		String info = "";
 		for (Entry<?, String> pair : treeMap.entrySet()){
 			info += pair.getKey() + ": " + pair.getValue() + "\n";
@@ -92,7 +110,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void showTracks(TreeMap<?,String> tracks){
-		TextView t = (TextView)findViewById(R.id.artist);
+		TextView t = (TextView)findViewById(R.id.tracks);
 		String trackList = "TRACKS: \n";
 		for(Entry<?, String> track : tracks.entrySet()){
 			trackList += track.getKey() + " - " + track.getValue() + "\n";

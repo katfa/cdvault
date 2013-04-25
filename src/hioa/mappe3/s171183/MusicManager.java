@@ -46,8 +46,11 @@ public class MusicManager {
 		JSONObject json = new JSONObject(result);
 		JSONArray resultArray = json.getJSONArray("results");
 		JSONObject resultObject = new JSONObject(resultArray.getString(0));
-		results.put("albumArt", resultObject.getString("thumb"));
-		results.put("resourceURL", resultObject.getString("resource_URL"));
+		String thumbnailPath = resultObject.getString("thumb");
+		results.put("albumArt", thumbnailPath);
+		
+		String resourceURL = resultObject.getString("resource_url");
+		results.put("resourceURL", resourceURL);
 		
 		return results;	
 	}
@@ -82,11 +85,10 @@ public class MusicManager {
 					return writer.toString();
 				
 			} catch (MalformedURLException e2) {
-				Log.e("ERRor" , e2.getMessage());
+				Log.e("ERROR" , "urlexception: " + e2.getMessage());
 			}
 			catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				Log.e("ERROR", "ioexception: " +  e1.getMessage());
 			}
 	        
 	        return "";
@@ -151,14 +153,12 @@ public class MusicManager {
 				details.put("Year", json.getString("year"));
 				
 			} catch (MalformedURLException e2) {
-				Log.e("ERRor" , e2.getMessage());
+				Log.e("ERROR" , e2.getMessage());
 			}
 			catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				Log.e("ERROR" , e1.getMessage());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e("ERROR" , e.getMessage());
 			}
 	        ArrayList<TreeMap<?, String>> albumDetails = new ArrayList<TreeMap<?,String>>();
 	        albumDetails.add(details);

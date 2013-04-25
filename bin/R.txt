@@ -19,9 +19,8 @@ int drawable launcher_icon 0x7f020001
 int drawable share_via_barcode 0x7f020002
 int drawable shopper_icon 0x7f020003
 int id action_settings 0x7f090033
-int id album 0x7f09000b
+int id album 0x7f090008
 int id albumArt 0x7f090009
-int id artist 0x7f09000a
 int id back_button 0x7f09001e
 int id barcode_image_view 0x7f090011
 int id bookmark_title 0x7f09000c
@@ -57,6 +56,7 @@ int id result_button_view 0x7f090019
 int id result_list_view 0x7f090024
 int id result_view 0x7f090010
 int id return_scan_result 0x7f090006
+int id saveAlbum 0x7f09000b
 int id share_app_button 0x7f090027
 int id share_bookmark_button 0x7f090028
 int id share_clipboard_button 0x7f09002a
@@ -67,8 +67,8 @@ int id snippet_view 0x7f090026
 int id startScanner 0x7f090007
 int id status_view 0x7f09001b
 int id time_text_view 0x7f090014
+int id tracks 0x7f09000a
 int id type_text_view 0x7f090013
-int id upc 0x7f090008
 int id viewfinder_view 0x7f09000f
 int layout activity_main 0x7f030000
 int layout bookmark_picker_list_item 0x7f030001

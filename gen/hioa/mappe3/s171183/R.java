@@ -52,9 +52,8 @@ public final class R {
     }
     public static final class id {
         public static final int action_settings=0x7f090033;
-        public static final int album=0x7f09000b;
+        public static final int album=0x7f090008;
         public static final int albumArt=0x7f090009;
-        public static final int artist=0x7f09000a;
         public static final int back_button=0x7f09001e;
         public static final int barcode_image_view=0x7f090011;
         public static final int bookmark_title=0x7f09000c;
@@ -90,6 +89,7 @@ public final class R {
         public static final int result_list_view=0x7f090024;
         public static final int result_view=0x7f090010;
         public static final int return_scan_result=0x7f090006;
+        public static final int saveAlbum=0x7f09000b;
         public static final int share_app_button=0x7f090027;
         public static final int share_bookmark_button=0x7f090028;
         public static final int share_clipboard_button=0x7f09002a;
@@ -100,8 +100,8 @@ public final class R {
         public static final int startScanner=0x7f090007;
         public static final int status_view=0x7f09001b;
         public static final int time_text_view=0x7f090014;
+        public static final int tracks=0x7f09000a;
         public static final int type_text_view=0x7f090013;
-        public static final int upc=0x7f090008;
         public static final int viewfinder_view=0x7f09000f;
     }
     public static final class layout {
