@@ -1,127 +1,106 @@
 package hioa.mappe3.s171183;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.concurrent.ExecutionException;
-
-import org.json.JSONException;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-public class MainActivity extends Activity {
-	private HashMap<String,String> results = new HashMap<String, String>();
-	private Drawable albumArt;
-	private ArrayList<TreeMap<?, String>> albumDetails =  new ArrayList<TreeMap<?,String>>();
-
-	private DBAdapter dbAdapter;
+@SuppressLint("NewApi")
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+	private ViewPager viewPager;
+	private SectionsPagerAdapter pagerAdapter;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		dbAdapter = new DBAdapter(this);
-		dbAdapter.open();
 		
-
-		Button startScanner = (Button) findViewById(R.id.startScanner);
-		startScanner.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(
-						"com.google.zxing.client.android.SCAN");
-				intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
-				startActivityForResult(intent, 0);
-			}
-		});
-	}
-
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		if (requestCode == 0) {
-			if (resultCode == RESULT_OK) {
-				String upcCode = intent.getStringExtra("SCAN_RESULT");
-				Log.d("UPCCODE", upcCode);
-				try {
-					results = MusicManager.searchByUPC(upcCode);
-					setAlbumArt(fetchAlbumArt(results.get("albumArt")));
-					fetchAlbumDetails(results.get("resourceURL"));
-					showAlbumDetails(albumDetails.get(0));
-					showTracks(albumDetails.get(1));
-					showSaveButton();
-					
-				} catch (InterruptedException e) {
-					Log.e("ERROR", e.getMessage());
-				} catch (ExecutionException e) {
-					Log.e("ERROR", e.getMessage());
-				} catch (JSONException e) {
-					Log.e("ERROR", e.getMessage());
-				}
-			} 
-		}
-	}
-	
-	private void showSaveButton(){
-		Button saveButton = (Button) findViewById(R.id.saveAlbum);
-		saveButton.setVisibility(View.VISIBLE);
-		saveButton.setText("Save to my collection");
-		saveButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// add artist, add album, add tracks
-			}
-		});
-	}
-	
-	private Drawable fetchAlbumArt(String url) throws InterruptedException, ExecutionException{
-		return MusicManager.getAlbumThumb(url);
-	}
-	
-	@SuppressLint("NewApi")
-	public void setAlbumArt(Drawable drawable){
-		ImageView albumArt = (ImageView)findViewById(R.id.albumArt);
-		albumArt.setBackground(drawable);
-	}
-	
-	private void fetchAlbumDetails(String url) throws InterruptedException, ExecutionException{
-		albumDetails = MusicManager.getAlbumDetails(url);
-	}
-	
-	public void showAlbumDetails(TreeMap<?, String> treeMap){
-		TextView t = (TextView)findViewById(R.id.album);
-		String info = "";
-		for (Entry<?, String> pair : treeMap.entrySet()){
-			info += pair.getKey() + ": " + pair.getValue() + "\n";
-		}
+		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		
-		t.setText(info);
+		final ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		viewPager = (ViewPager)findViewById(R.id.pager);
+		viewPager.setAdapter(pagerAdapter);
+		
+		viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                actionBar.setSelectedNavigationItem(position);
+            }
+        });
+		
+		for (int i = 0; i < pagerAdapter.getCount(); i++) {
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText(pagerAdapter.getPageTitle(i))
+                            .setTabListener(this));
+        }
+		
 	}
 
-	public void showTracks(TreeMap<?,String> tracks){
-		TextView t = (TextView)findViewById(R.id.tracks);
-		String trackList = "TRACKS: \n";
-		for(Entry<?, String> track : tracks.entrySet()){
-			trackList += track.getKey() + " - " + track.getValue() + "\n";
-		}
-		
-		t.setText(trackList);
-	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+
+	@Override
+	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction transaction) {
+		viewPager.setCurrentItem(tab.getPosition());
+	}
+
+	@Override
+	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+		public SectionsPagerAdapter(FragmentManager fm) {
+			super(fm);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+        public Fragment getItem(int i) {
+            switch (i) {
+                case 0:
+                    return new SearchAndScanFragment();
+
+                default:
+                    return new Fragment();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Section " + (position + 1);
+        }
+	
+	
+	}
+	
+
 }

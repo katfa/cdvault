@@ -47,7 +47,7 @@ public class MusicManager {
 		JSONArray resultArray = json.getJSONArray("results");
 		JSONObject resultObject = new JSONObject(resultArray.getString(0));
 		String thumbnailPath = resultObject.getString("thumb");
-		results.put("albumArt", thumbnailPath);
+		results.put("Album Art", thumbnailPath);
 		
 		String resourceURL = resultObject.getString("resource_url");
 		results.put("resourceURL", resourceURL);

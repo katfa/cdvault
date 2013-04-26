@@ -90,6 +90,10 @@ public class DBAdapter extends SQLiteOpenHelper {
 	public void insertArtist(Artist artist){}
 	public void insertAlbum(Album album){}
 	public void insertTrack(Track track){}
+	public Artist getArtist(int id){ return null; }
+	public int getArtistId(Artist a) { return 0; }
+	public int getAlbumId(Album a) { return 0; }
+	
 	
 	
 }
