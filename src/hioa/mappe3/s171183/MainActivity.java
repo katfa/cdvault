@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		viewPager = (ViewPager)findViewById(R.id.pager);
 		viewPager.setAdapter(pagerAdapter);
-		
+
 		viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -46,7 +46,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -73,9 +72,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	
 	private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+		private String[] titles = {"Search or Scan", "Artists", "Albums", "Concerts" };
+		
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
@@ -83,6 +83,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             switch (i) {
                 case 0:
                     return new SearchAndScanFragment();
+                case 1:
+                	return new ArtistFragment();
 
                 default:
                     return new Fragment();
@@ -91,12 +93,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Section " + (position + 1);
+            return titles[position];
         }
 	
 	

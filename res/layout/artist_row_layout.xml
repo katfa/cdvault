@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
+    android:orientation="vertical"
+    android:textSize="27sp"
+    android:textColor="@color/black"
+    android:id="@+id/artist_name" >
+</TextView>
