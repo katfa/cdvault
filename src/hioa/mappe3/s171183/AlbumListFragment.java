@@ -3,6 +3,7 @@ package hioa.mappe3.s171183;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -25,6 +27,7 @@ public class AlbumListFragment extends Fragment{
 	private DBAdapter dbAdapter;
 	
 	private View thisFragmentView;
+	private FragmentManager fManager;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +35,7 @@ public class AlbumListFragment extends Fragment{
 		Log.d("albumListfragment", " created ");
 		super.onCreate(savedInstanceState);
 		thisFragmentView = inflater.inflate(R.layout.albums, container, false);
+		fManager = this.getFragmentManager();
 
 		dbAdapter = new DBAdapter(getActivity().getBaseContext());
 		dbAdapter.open();
@@ -50,7 +54,9 @@ public class AlbumListFragment extends Fragment{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Toast.makeText(thisFragmentView.getContext(), ((Album)view.getTag()).getTitle() + " selected.", Toast.LENGTH_SHORT).show();		
+				
+					EditDeleteDialog dialog = new EditDeleteDialog((Album)view.getTag(), AlbumListFragment.this);
+					dialog.show(fManager, "editDeleteDialog");
 			}
 		});
 

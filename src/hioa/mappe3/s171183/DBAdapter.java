@@ -136,6 +136,11 @@ public class DBAdapter extends SQLiteOpenHelper {
 		Artist a = getArtistByName(artist.getName());
 		return a.getId();
 	}
+	
+	public void deleteArtist(int id){
+		db = this.getWritableDatabase();
+		db.delete(ARTIST_TABLE, ID + "=?", new String[]{ String.valueOf(id) });
+	}
 
 	// ALBUMS
 
@@ -204,6 +209,30 @@ public class DBAdapter extends SQLiteOpenHelper {
 			return cursor.getInt(cursor.getColumnIndex(ID));
 		} else
 			return 0;
+	}
+	
+	public ArrayList<Album> getAlbumByArtist(int artistId){
+		ArrayList<Album> albums = new ArrayList<Album>();
+		db = this.getReadableDatabase();
+		Cursor cursor = db.query(ALBUM_TABLE, new String[] { ID, TITLE,  ALBUM_ART, YEAR,  ARTIST_ID }, 
+				ARTIST_ID + "=?",  new String[] { String.valueOf(artistId) }, null, null, null, null );
+		
+		if(cursor.moveToFirst()){
+			while(cursor.isAfterLast() == false){
+				int id = cursor.getInt(cursor.getColumnIndex(ID));
+				String title = cursor.getString(cursor.getColumnIndex(TITLE));
+				String thumb = cursor.getString(cursor.getColumnIndex(ALBUM_ART));
+				String year = cursor.getString(cursor.getColumnIndex(YEAR));
+			
+				albums.add(new Album(id, title, year, thumb, artistId));
+			}
+		}
+		cursor.close();
+		return albums;
+	}
+	public void deleteAlbum(int albumId){
+		db = this.getWritableDatabase();
+		db.delete(ALBUM_TABLE, ID + " =?", new String[] { String.valueOf(albumId) });
 	}
 
 	public boolean albumExists(Album album) {

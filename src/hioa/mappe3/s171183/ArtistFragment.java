@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ public class ArtistFragment extends Fragment {
 	private DBAdapter dbAdapter;
 	
 	private View thisFragmentView;
+	private FragmentManager fManager;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +34,7 @@ public class ArtistFragment extends Fragment {
 		Log.d("listfragment", " created ");
 		super.onCreate(savedInstanceState);
 		thisFragmentView = inflater.inflate(R.layout.artists, container, false);
+		fManager = this.getFragmentManager();
 
 		dbAdapter = new DBAdapter(getActivity().getBaseContext());
 		dbAdapter.open();
@@ -50,8 +53,8 @@ public class ArtistFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				System.out.println("click");
-				Toast.makeText(thisFragmentView.getContext(), ((Artist)view.getTag()).getName() + " selected.", Toast.LENGTH_SHORT).show();		
+				EditDeleteDialog dialog = new EditDeleteDialog((Artist)view.getTag(), ArtistFragment.this);
+				dialog.show(fManager, "EditDeleteDialog");
 			}
 		});
 
