@@ -85,6 +85,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     return new SearchAndScanFragment();
                 case 1:
                 	return new ArtistFragment();
+                case 2:
+                	return new AlbumListFragment();
 
                 default:
                     return new Fragment();
@@ -93,7 +95,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
