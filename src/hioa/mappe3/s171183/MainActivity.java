@@ -19,13 +19,21 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private ViewPager viewPager;
 	private SectionsPagerAdapter pagerAdapter;
 	private int currentPageNumber;
-	private Button refreshButton;
 	
+	private SearchAndScanFragment searchAndScanFragment;
+	private AlbumListFragment albumListFragment;
+	private ArtistFragment artistFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+    	searchAndScanFragment = new SearchAndScanFragment();
+    	artistFragment = new ArtistFragment();
+    	albumListFragment = new AlbumListFragment();
+
+    	searchAndScanFragment.setArtistFragment(artistFragment);
 		
 		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		
@@ -38,11 +46,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             @Override
             public void onPageSelected(int position) {
             	currentPageNumber = position;
+            	System.out.println("CURRENT PAGE: " + currentPageNumber);
             	invalidateOptionsMenu();
                 actionBar.setSelectedNavigationItem(position);
             }
         });
-		
+
 		for (int i = 0; i < pagerAdapter.getCount(); i++) {
             actionBar.addTab(
                     actionBar.newTab()
@@ -66,17 +75,21 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch (item.getItemId()){
 		case R.id.refresh:
-			System.out.println(" refresh clicked");
+			artistFragment.updateList(artistFragment.getDbAdapter().getAllArtists());
+			artistFragment.getArtistAdapter().notifyDataSetChanged();
+			return false;
 		}
 		return false;
 	}
 
 	@Override
-	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+	public void onTabReselected(Tab tab, FragmentTransaction arg1) {
+		viewPager.setCurrentItem(tab.getPosition());
 	}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction transaction) {
+		System.out.println("tab selected " + tab.getPosition());
 		viewPager.setCurrentItem(tab.getPosition());
 	}
 
@@ -94,13 +107,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		@Override
         public Fragment getItem(int i) {
-            switch (i) {
+			switch (i) {
                 case 0:
-                    return new SearchAndScanFragment();
+                    return searchAndScanFragment;
                 case 1:
-                	return new ArtistFragment();
+                	return artistFragment;
                 case 2:
-                	return new AlbumListFragment();
+                	return albumListFragment;
 
                 default:
                     return new Fragment();
@@ -109,7 +122,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override

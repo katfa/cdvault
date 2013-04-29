@@ -1,15 +1,17 @@
 package hioa.mappe3.s171183;
 
+import hioa.mappe3.s171183.ArtistFragment.ArtistAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class EditArtist extends Activity {
+public class EditArtist extends FragmentActivity {
 	private TextView artistName;
 	private Button updateButton;
 
@@ -33,9 +35,8 @@ public class EditArtist extends Activity {
 			public void onClick(View v) {
 				String newName = artistName.getText().toString();
 				if (dbAdapter.updateArtist(artist, newName) == 1) {
-					Toast.makeText(getApplicationContext(), "Artist updated.", Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), "Artist updated. Press refresh icon.", Toast.LENGTH_LONG).show();
 					finish();
-					ArtistFragment.updateList(dbAdapter.getAllArtists());
 				} else {
 					Toast.makeText(getApplicationContext(), "Artist was not updated ", Toast.LENGTH_SHORT).show();
 				}
@@ -50,5 +51,4 @@ public class EditArtist extends Activity {
 		getMenuInflater().inflate(R.menu.edit_artist, menu);
 		return true;
 	}
-
 }

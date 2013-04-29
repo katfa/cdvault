@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.7"
+        android:layout_weight="0.75"
         android:orientation="vertical" >
 
         <TextView
@@ -36,7 +36,7 @@
         android:id="@+id/album_thumb"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.3"
+        android:layout_weight="0.25"
         android:contentDescription="@string/album_content_description"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="10dp"

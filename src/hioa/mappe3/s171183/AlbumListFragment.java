@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 public class AlbumListFragment extends Fragment{
 	private ArrayList<Album> allAlbums;
-	private ArrayAdapter<Album> albumAdapter;
+	private static ArrayAdapter<Album> albumAdapter;
 	private DBAdapter dbAdapter;
 	
 	private View thisFragmentView;
@@ -41,9 +41,6 @@ public class AlbumListFragment extends Fragment{
 		dbAdapter.open();
 		
 		allAlbums = dbAdapter.getAllAlbums();
-		for(Album a : allAlbums){
-			System.out.println(a.getTitle());
-		}
 		
 		albumAdapter = new AlbumAdapter(getActivity().getBaseContext(), R.layout.album_row_layout, allAlbums);
 		ListView albumList = (ListView) thisFragmentView.findViewById(R.id.album_list);
@@ -63,6 +60,11 @@ public class AlbumListFragment extends Fragment{
 		return thisFragmentView;
 		
 	}
+	
+	public static void updateList(ArrayList<Album> albums) {
+		((AlbumAdapter) albumAdapter).updateList(albums);
+	}
+
 	
 	private class AlbumAdapter extends ArrayAdapter<Album> {
 		private Context context;
@@ -104,6 +106,9 @@ public class AlbumListFragment extends Fragment{
 			
 		}
 		
+		public void updateList(ArrayList<Album> albums){
+			this.albums = albums;
+		}
+		
 	}
-
 }

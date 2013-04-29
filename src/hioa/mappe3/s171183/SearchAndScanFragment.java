@@ -30,6 +30,8 @@ public class SearchAndScanFragment extends Fragment {
 
 	private DBAdapter dbAdapter;
 	private View thisFragmentView;
+	
+	private ArtistFragment artistFragment;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,12 +57,16 @@ public class SearchAndScanFragment extends Fragment {
 		});
 
 		getActivity().getActionBar().setTitle("Search or Scan");
-
+		
 		return thisFragmentView;
 	}
 
 	public String getFragmentTitle() {
 		return "Search or Scan";
+	}
+	
+	public void setArtistFragment(ArtistFragment artistFragment){
+		this.artistFragment = artistFragment;
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -119,8 +125,7 @@ public class SearchAndScanFragment extends Fragment {
 					// tracks
 					details = albumDetails.get(1);
 					for (Entry<?, String> pair : details.entrySet()) {
-						Track track = new Track(pair.getKey().toString(), pair
-								.getValue(), dbAdapter.getAlbumId(album));
+						Track track = new Track(pair.getKey().toString(), pair.getValue(), dbAdapter.getAlbumId(album));
 						dbAdapter.insertTrack(track);
 					}
 
@@ -129,6 +134,9 @@ public class SearchAndScanFragment extends Fragment {
 							Toast.LENGTH_SHORT).show();
 
 				}
+				
+				artistFragment.updateList(dbAdapter.getAllArtists());
+				
 			}
 		});
 	}

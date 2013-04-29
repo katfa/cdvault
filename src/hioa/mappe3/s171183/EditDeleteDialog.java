@@ -18,6 +18,7 @@ public class EditDeleteDialog extends DialogFragment {
 	private Album album;
 	private AlbumListFragment albumListFragment;
 	
+	
 	public EditDeleteDialog(){}
 	public EditDeleteDialog(Artist artist, ArtistFragment artistFragment){
 		this.artist = artist;
@@ -82,6 +83,14 @@ public class EditDeleteDialog extends DialogFragment {
 						Intent intent = new Intent(getActivity(), EditArtist.class);
 						intent.putExtra("artist", artist);
 						startActivity(intent);
+					}
+					
+					if(arrayAdapter.getItem(arg1).equals("Delete")) {
+						DBAdapter db = artistFragment.getDbAdapter();
+						db.deleteArtist(artist.getId());
+						artistFragment.getArtistAdapter().remove(artist);
+						artistFragment.updateList(artistFragment.getDbAdapter().getAllArtists());
+						Toast.makeText(getActivity(), artist.getName() + " and all their albums deleted.", Toast.LENGTH_LONG).show();
 					}
 				}
 			});

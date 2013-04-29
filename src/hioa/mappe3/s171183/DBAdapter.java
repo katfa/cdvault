@@ -136,6 +136,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 
 	public void deleteArtist(int id) {
+		deleteAlbumsByArtist(id);
 		dbWritable.delete(ARTIST_TABLE, ID + "=?", new String[] { String.valueOf(id) });
 	}
 
@@ -257,6 +258,10 @@ public class DBAdapter extends SQLiteOpenHelper {
 	public void deleteAlbum(int albumId) {
 		dbWritable.delete(ALBUM_TABLE, ID + " =?",
 				new String[] { String.valueOf(albumId) });
+	}
+	
+	public void deleteAlbumsByArtist(int artistId){
+		dbWritable.delete(ALBUM_TABLE, ARTIST_ID + "=?", new String[] { String.valueOf(artistId) });
 	}
 
 	public boolean albumExists(Album album) {
