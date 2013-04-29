@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class DBAdapter extends SQLiteOpenHelper {
 	Context context;
-	private SQLiteDatabase db;
+	private static SQLiteDatabase dbWritable, dbReadable;
 
 	private final String TAG = "DBAdapter", ARTIST_TABLE = "artist",
 			NAME = "name", ALBUM_TABLE = "album", TITLE = "title",
@@ -35,7 +35,8 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 
 	public DBAdapter open() throws SQLException {
-		db = this.getWritableDatabase();
+		dbWritable = this.getWritableDatabase();
+		dbReadable = this.getReadableDatabase();
 		return this;
 	}
 
@@ -87,8 +88,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		ArrayList<Artist> allArtists = new ArrayList<Artist>();
 		String selectQuery = "select * from " + ARTIST_TABLE;
 
-		db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+		Cursor cursor = dbReadable.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
 			while (cursor.isAfterLast() == false) {
 				int id = cursor.getInt(cursor.getColumnIndex(ID));
@@ -104,42 +104,65 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 
 	public void insertArtist(Artist artist) {
-		db = this.getWritableDatabase();
 		ContentValues values = new ContentValues(1);
 		values.put(NAME, artist.getName());
 
-		db.insert(ARTIST_TABLE, null, values);
+		dbWritable.insert(ARTIST_TABLE, null, values);
 		Log.d(TAG, artist.getName() + " added to database.");
 	}
 
 	public boolean artistExists(Artist artist) {
-		db = this.getReadableDatabase();
-		Cursor cursor = db.query(ARTIST_TABLE, new String[] { NAME }, NAME
+		Cursor cursor = dbReadable.query(ARTIST_TABLE, new String[] { NAME }, NAME
 				+ "=?", new String[] { artist.getName() }, null, null, null,
 				null);
 		return cursor.moveToFirst();
 	}
 
 	public Artist getArtistByName(String name) {
-		db = this.getReadableDatabase();
-		Cursor cursor = db.query(ARTIST_TABLE, new String[] { ID, NAME }, NAME
+		Cursor cursor = dbReadable.query(ARTIST_TABLE, new String[] { ID, NAME }, NAME
 				+ "=?", new String[] { name }, null, null, null, null);
 
 		if (cursor.moveToFirst()) {
-			return new Artist(cursor.getInt(cursor.getColumnIndex(ID)),
-					cursor.getString(cursor.getColumnIndex(NAME)));
-		} else
-			return null;
+			int id = cursor.getInt(cursor.getColumnIndex(ID));
+			String artistName = cursor.getString(cursor.getColumnIndex(NAME));
+			cursor.close();
+			return new Artist(id, artistName);
+		} else return null;
 	}
 
 	public int getArtistId(Artist artist) {
 		Artist a = getArtistByName(artist.getName());
 		return a.getId();
 	}
+
+	public void deleteArtist(int id) {
+		dbWritable.delete(ARTIST_TABLE, ID + "=?", new String[] { String.valueOf(id) });
+	}
+
+	public int updateArtist(Artist artist, String newName) {
+		ContentValues values = new ContentValues();
+		int otherArtistId;
+		
+		/* check if an artist with the same name exists, if so, 
+		 * delete parameter artist
+		 * and update albums to have other artist's id. */
+		
+		Artist possibleMatch = getArtistByName(newName);
+		if (possibleMatch != null) {
+			otherArtistId = possibleMatch.getId();
+
+			ArrayList<Album> albums = getAlbumsByArtist(getArtistId(artist));
+			for (Album a : albums) {
+				updateAlbumArtistId(a, otherArtistId);
+			}
 	
-	public void deleteArtist(int id){
-		db = this.getWritableDatabase();
-		db.delete(ARTIST_TABLE, ID + "=?", new String[]{ String.valueOf(id) });
+			deleteArtist(artist.getId());
+			return 1;
+		} else {
+			values.put(NAME, newName);
+			return dbWritable.update(ARTIST_TABLE, values, ID + "=?",
+					new String[] { String.valueOf(artist.getId()) });
+		}
 	}
 
 	// ALBUMS
@@ -148,27 +171,26 @@ public class DBAdapter extends SQLiteOpenHelper {
 		ArrayList<Album> allAlbums = new ArrayList<Album>();
 		String selectQuery = "select * from " + ALBUM_TABLE;
 
-		db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+		Cursor cursor = dbReadable.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
 			while (cursor.isAfterLast() == false) {
 				int id = cursor.getInt(cursor.getColumnIndex(ID));
 				String title = cursor.getString(cursor.getColumnIndex(TITLE));
 				String year = cursor.getString(cursor.getColumnIndex(YEAR));
 				int artistID = cursor.getInt(cursor.getColumnIndex(ARTIST_ID));
-				String thumb = cursor.getString(cursor.getColumnIndex(ALBUM_ART));
+				String thumb = cursor.getString(cursor
+						.getColumnIndex(ALBUM_ART));
 
-				Album a = new Album(id,title, year, thumb, artistID);
+				Album a = new Album(id, title, year, thumb, artistID);
 				allAlbums.add(a);
 				cursor.moveToNext();
 			}
 		}
-
+		cursor.close();
 		return allAlbums;
 	}
 
 	public void insertAlbum(Album album) {
-		db = this.getWritableDatabase();
 		ContentValues values = new ContentValues(4);
 
 		values.put(TITLE, album.getTitle());
@@ -176,13 +198,12 @@ public class DBAdapter extends SQLiteOpenHelper {
 		values.put(ALBUM_ART, album.getAlbumArtPath());
 		values.put(ARTIST_ID, album.getArtistId());
 
-		db.insert(ALBUM_TABLE, null, values);
+		dbWritable.insert(ALBUM_TABLE, null, values);
 		Log.d(TAG, album.getTitle() + " added to database.");
 	}
 
 	public Album getAlbum(Album album) {
-		db = this.getReadableDatabase();
-		Cursor cursor = db.query(
+		Cursor cursor = dbReadable.query(
 				ALBUM_TABLE,
 				new String[] { ID, TITLE, YEAR, ALBUM_ART, ARTIST_ID },
 				TITLE + "=? AND " + ARTIST_ID + "=?",
@@ -192,14 +213,14 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 		if (cursor.moveToFirst()) {
 			album.setId(cursor.getInt(cursor.getColumnIndex(ID)));
+			cursor.close();
 			return album;
 		} else
 			return null;
 	}
 
 	public int getAlbumId(Album a) {
-		db = this.getReadableDatabase();
-		Cursor cursor = db.query(
+		Cursor cursor = dbReadable.query(
 				ALBUM_TABLE,
 				new String[] { ID },
 				TITLE + "=? AND " + ARTIST_ID + "=? AND " + YEAR + "=?",
@@ -210,51 +231,60 @@ public class DBAdapter extends SQLiteOpenHelper {
 		} else
 			return 0;
 	}
-	
-	public ArrayList<Album> getAlbumByArtist(int artistId){
+
+	public ArrayList<Album> getAlbumsByArtist(int artistId) {
 		ArrayList<Album> albums = new ArrayList<Album>();
-		db = this.getReadableDatabase();
-		Cursor cursor = db.query(ALBUM_TABLE, new String[] { ID, TITLE,  ALBUM_ART, YEAR,  ARTIST_ID }, 
-				ARTIST_ID + "=?",  new String[] { String.valueOf(artistId) }, null, null, null, null );
-		
-		if(cursor.moveToFirst()){
-			while(cursor.isAfterLast() == false){
+		Cursor cursor = dbReadable.query(ALBUM_TABLE, new String[] { ID, TITLE,
+				ALBUM_ART, YEAR, ARTIST_ID }, ARTIST_ID + "=?",
+				new String[] { String.valueOf(artistId) }, null, null, null,
+				null);
+
+		if (cursor.moveToFirst()) {
+			while (cursor.isAfterLast() == false) {
 				int id = cursor.getInt(cursor.getColumnIndex(ID));
 				String title = cursor.getString(cursor.getColumnIndex(TITLE));
-				String thumb = cursor.getString(cursor.getColumnIndex(ALBUM_ART));
+				String thumb = cursor.getString(cursor
+						.getColumnIndex(ALBUM_ART));
 				String year = cursor.getString(cursor.getColumnIndex(YEAR));
-			
+
 				albums.add(new Album(id, title, year, thumb, artistId));
 			}
 		}
 		cursor.close();
 		return albums;
 	}
-	public void deleteAlbum(int albumId){
-		db = this.getWritableDatabase();
-		db.delete(ALBUM_TABLE, ID + " =?", new String[] { String.valueOf(albumId) });
+
+	public void deleteAlbum(int albumId) {
+		dbWritable.delete(ALBUM_TABLE, ID + " =?",
+				new String[] { String.valueOf(albumId) });
 	}
 
 	public boolean albumExists(Album album) {
-		db = this.getReadableDatabase();
-		Cursor cursor = db.query(ALBUM_TABLE, new String[] { TITLE }, TITLE
+		Cursor cursor = dbReadable.query(ALBUM_TABLE, new String[] { TITLE }, TITLE
 				+ "=? AND " + ARTIST_ID + "=?", new String[] {
 				album.getTitle(), String.valueOf(album.getArtistId()) }, null,
 				null, null, null);
 		return cursor.moveToFirst();
 	}
 
+	public int updateAlbumArtistId(Album album, int artistId) {
+		ContentValues values = new ContentValues();
+		values.put(ARTIST_ID, artistId);
+
+		return dbWritable.update(ALBUM_TABLE, values, ID + "=?",
+				new String[] { String.valueOf(album.getId()) });
+	}
+
 	// TRACKS
 
 	public void insertTrack(Track track) {
-		db = this.getWritableDatabase();
 		ContentValues values = new ContentValues(3);
 
 		values.put(TITLE, track.getTitle());
 		values.put(TRACK_NUMBER, track.getTrackNumber());
 		values.put(ALBUM_ID, track.getAlbumId());
 
-		db.insert(TRACK_TABLE, null, values);
+		dbWritable.insert(TRACK_TABLE, null, values);
 		Log.d(TAG, track.getTitle() + " added to database.");
 	}
 }

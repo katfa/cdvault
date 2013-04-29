@@ -9,20 +9,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ArtistFragment extends Fragment {
 	private ArrayList<Artist> allArtists;
-	private ArrayAdapter<Artist> artistAdapter;
+	private static ArrayAdapter<Artist> artistAdapter;
 	private DBAdapter dbAdapter;
 	
 	private View thisFragmentView;
@@ -35,14 +34,11 @@ public class ArtistFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		thisFragmentView = inflater.inflate(R.layout.artists, container, false);
 		fManager = this.getFragmentManager();
-
+		
 		dbAdapter = new DBAdapter(getActivity().getBaseContext());
 		dbAdapter.open();
 		
 		allArtists = dbAdapter.getAllArtists();
-		for(Artist a : allArtists){
-			System.out.println(a.getName());
-		}
 		
 		artistAdapter = new ArtistAdapter(getActivity().getBaseContext(), R.layout.artist_row_layout, allArtists);
 		ListView artistsList = (ListView) thisFragmentView.findViewById(R.id.artist_list);
@@ -60,6 +56,10 @@ public class ArtistFragment extends Fragment {
 
 		return thisFragmentView;
 		
+	}
+	
+	public static void updateList(ArrayList<Artist> artists){
+		((ArtistAdapter) artistAdapter).updateList(artists);
 	}
 	
 	private class ArtistAdapter extends ArrayAdapter<Artist> {
@@ -87,6 +87,10 @@ public class ArtistFragment extends Fragment {
 			
 			return row;
 			
+		}
+		
+		public void updateList(ArrayList<Artist> artists){
+			this.artists = artists;
 		}
 		
 	}

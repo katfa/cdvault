@@ -91,7 +91,7 @@ public class SearchAndScanFragment extends Fragment {
 		Button saveButton = (Button) thisFragmentView
 				.findViewById(R.id.saveAlbum);
 		saveButton.setVisibility(View.VISIBLE);
-		saveButton.setText("Save to my collection");
+		saveButton.setText(R.string.save);
 		saveButton.setOnClickListener(new OnClickListener() {
 
 			@Override

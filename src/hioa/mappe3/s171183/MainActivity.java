@@ -11,11 +11,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
 
 @SuppressLint("NewApi")
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 	private ViewPager viewPager;
 	private SectionsPagerAdapter pagerAdapter;
+	private int currentPageNumber;
+	private Button refreshButton;
 	
 	
 	@Override
@@ -33,6 +37,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+            	currentPageNumber = position;
+            	invalidateOptionsMenu();
                 actionBar.setSelectedNavigationItem(position);
             }
         });
@@ -43,20 +49,30 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                             .setText(pagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
-		
+			
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		if(currentPageNumber == 0)
+			menu.findItem(R.id.refresh).setVisible(false);
+		
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch (item.getItemId()){
+		case R.id.refresh:
+			System.out.println(" refresh clicked");
+		}
+		return false;
 	}
 
 	@Override
 	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -66,8 +82,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	@Override
 	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	private class SectionsPagerAdapter extends FragmentPagerAdapter {

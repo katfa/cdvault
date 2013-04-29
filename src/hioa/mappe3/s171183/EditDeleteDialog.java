@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
@@ -30,7 +31,6 @@ public class EditDeleteDialog extends DialogFragment {
 	
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		if(albumListFragment != null){
-			String title = album.getTitle();
 			AlertDialog.Builder builder = new AlertDialog.Builder(albumListFragment.getActivity());
 			builder.setTitle(getString(R.string.dialog_title));
 			final ArrayAdapter<String> arrayAdapter =  new ArrayAdapter<String>(albumListFragment.getActivity(), android.R.layout.select_dialog_item);
@@ -59,7 +59,6 @@ public class EditDeleteDialog extends DialogFragment {
 		} 
 		
 		if(artistFragment != null){
-			String name = artist.getName();
 			AlertDialog.Builder builder = new AlertDialog.Builder(artistFragment.getActivity());
 			builder.setTitle(getString(R.string.dialog_title));
 			final ArrayAdapter<String> arrayAdapter =  new ArrayAdapter<String>(artistFragment.getActivity(), android.R.layout.select_dialog_item);
@@ -79,7 +78,11 @@ public class EditDeleteDialog extends DialogFragment {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int arg1) {
-					Toast.makeText(artistFragment.getActivity().getBaseContext(), "You selected " + arrayAdapter.getItem(arg1), Toast.LENGTH_SHORT).show();
+					if(arrayAdapter.getItem(arg1).equals("Edit")){
+						Intent intent = new Intent(getActivity(), EditArtist.class);
+						intent.putExtra("artist", artist);
+						startActivity(intent);
+					}
 				}
 			});
 			

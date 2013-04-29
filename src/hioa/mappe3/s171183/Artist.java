@@ -1,7 +1,10 @@
 package hioa.mappe3.s171183;
 
-public class Artist {
-	
+import java.io.Serializable;
+
+public class Artist implements Serializable{
+	private static final long serialVersionUID = 1L;
+
 	public int id;
 	private String name;
 	
@@ -24,6 +27,10 @@ public class Artist {
 	
 	public void setId(int id){
 		this.id = id;
+	}
+	
+	public void setName(String name){
+		this.name = name;
 	}
 
 }

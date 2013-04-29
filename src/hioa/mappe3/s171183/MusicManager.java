@@ -44,12 +44,22 @@ public class MusicManager {
 		HashMap<String, String> results = new HashMap<String, String>();
 		String result = new GetResultsByUPC().execute(UPC_SEARCH + upcCode + CALLBACK).get();
 		JSONObject json = new JSONObject(result);
+		Log.d("API", "jsonobject " + json);
 		JSONArray resultArray = json.getJSONArray("results");
+		
+		// some UPCs do not include last digit
+		if(resultArray.length() == 0){
+			result = new GetResultsByUPC().execute(UPC_SEARCH + upcCode.substring(0,  upcCode.length() - 1) + CALLBACK).get(); 
+			json = new JSONObject(result);
+			resultArray = json.getJSONArray("results");
+		} 
+		
 		JSONObject resultObject = new JSONObject(resultArray.getString(0));
 		String thumbnailPath = resultObject.getString("thumb");
 		results.put("Album Art", thumbnailPath);
 		
 		String resourceURL = resultObject.getString("resource_url");
+		Log.d("API", resourceURL);
 		results.put("resourceURL", resourceURL);
 		
 		return results;	
@@ -153,12 +163,12 @@ public class MusicManager {
 				details.put("Year", json.getString("year"));
 				
 			} catch (MalformedURLException e2) {
-				Log.e("ERROR" , e2.getMessage());
+				Log.e("ERROR" , "url exception: " + e2.getMessage());
 			}
 			catch (IOException e1) {
 				Log.e("ERROR" , e1.getMessage());
 			} catch (JSONException e) {
-				Log.e("ERROR" , e.getMessage());
+				Log.e("ERROR" , "json problem getting details " + e.getMessage());
 			}
 	        ArrayList<TreeMap<?, String>> albumDetails = new ArrayList<TreeMap<?,String>>();
 	        albumDetails.add(details);
