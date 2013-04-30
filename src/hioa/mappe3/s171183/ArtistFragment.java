@@ -26,6 +26,8 @@ public class ArtistFragment extends Fragment{
 
 	private View thisFragmentView;
 	private FragmentManager fManager;
+	
+	private AlbumListFragment albumListFragment;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +57,7 @@ public class ArtistFragment extends Fragment{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				EditDeleteDialog dialog = new EditDeleteDialog((Artist) view
-						.getTag(), ArtistFragment.this);
+						.getTag(), ArtistFragment.this, albumListFragment);
 				dialog.show(fManager, "EditDeleteDialog");
 			}
 		});
@@ -75,6 +77,10 @@ public class ArtistFragment extends Fragment{
 
 	public DBAdapter getDbAdapter() {
 		return this.dbAdapter;
+	}
+	
+	public void setAlbumListFragment(AlbumListFragment albumListFragment){
+		this.albumListFragment = albumListFragment;
 	}
 
 	public class ArtistAdapter extends ArrayAdapter<Artist> {

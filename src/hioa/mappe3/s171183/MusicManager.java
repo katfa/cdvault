@@ -1,6 +1,8 @@
 package hioa.mappe3.s171183;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -71,7 +73,7 @@ public class MusicManager {
 	}
 	
 	
-	public static Drawable getAlbumThumb(String url) throws InterruptedException, ExecutionException{
+	public static byte[] getAlbumThumb(String url) throws InterruptedException, ExecutionException{
 		return new GetAlbumThumb().execute(url).get();
 	}
 	
@@ -105,10 +107,10 @@ public class MusicManager {
 		}
 	}
 	
-	private static class GetAlbumThumb extends AsyncTask<String,String,Drawable>{
+	private static class GetAlbumThumb extends AsyncTask<String,String,byte[]>{
 		@SuppressWarnings("deprecation")
 		@Override
-		protected Drawable doInBackground(String... urls){
+		protected byte[] doInBackground(String... urls){
 			URL url;        
 	        InputStream inputStream;
 	        BufferedInputStream bufferedInput;
@@ -117,7 +119,8 @@ public class MusicManager {
 	            inputStream = url.openStream();
 
 	            bufferedInput = new BufferedInputStream(inputStream);
-	            Bitmap bitMap = BitmapFactory.decodeStream(bufferedInput);
+	            byte[] albumArtBytes = IOUtils.toByteArray(bufferedInput);
+	            		
 	            if (inputStream != null) {
 	                inputStream.close();
 	            }
@@ -125,7 +128,7 @@ public class MusicManager {
 	                bufferedInput.close();
 	            }
 
-	            return new BitmapDrawable(bitMap);
+	            return albumArtBytes;
 	        }
 	        catch(Exception e){
 	        	

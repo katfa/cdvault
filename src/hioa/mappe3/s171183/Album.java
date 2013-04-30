@@ -1,23 +1,30 @@
 package hioa.mappe3.s171183;
 
-public class Album {
-	
+import java.io.ByteArrayInputStream;
+import java.io.Serializable;
+
+import android.graphics.drawable.Drawable;
+
+public class Album implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	public int id;
 	private int artistId;
-	private String title, year, albumArtPath;
+	private String title, year;
+	private byte[] albumArt;
 	
-	public Album(String title, String year, String albumArtPath, int artistId){
+	public Album(String title, String year, byte[] albumArt, int artistId){
 		this.title = title;
 		this.year = year;
-		this.albumArtPath = albumArtPath;
+		this.albumArt = albumArt;
 		this.artistId = artistId;
 	}
 	
-	public Album(int id, String title, String year, String albumArtPath, int artistId){
+	public Album(int id, String title, String year, byte[] albumArt, int artistId){
 		this.id = id;
 		this.title = title;
 		this.year = year;
-		this.albumArtPath = albumArtPath;
+		this.albumArt = albumArt;
 		this.artistId = artistId;
 	}
 	
@@ -29,8 +36,13 @@ public class Album {
 		return this.year;
 	}
 	
-	public String getAlbumArtPath(){
-		return this.albumArtPath;
+	public byte[] getAlbumArt(){
+		return this.albumArt;
+	}
+	
+	public Drawable getAlbumArtDrawable(){
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(albumArt);
+		return Drawable.createFromStream(inputStream, "albumThumb");
 	}
 	
 	public int getArtistId() {

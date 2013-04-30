@@ -12,5 +12,10 @@
     <string name="artist_name">Artist Name:</string>
     <string name="update">Update</string>
     <string name="save">Save to collection</string>
+    <string name="title_activity_artists_album_list">ArtistsAlbumList</string>
+    <string name="scan_label">Scan CD barcode</string>
+    <string name="scanner_icon_descripton">Scanner button</string>
+    <string name="title_activity_track_list">TrackList</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

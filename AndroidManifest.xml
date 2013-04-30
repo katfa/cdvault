@@ -46,6 +46,14 @@
             android:name="hioa.mappe3.s171183.EditArtist"
             android:label="@string/title_activity_edit_artist" >
         </activity>
+        <activity
+            android:name="hioa.mappe3.s171183.ArtistsAlbumList"
+            android:label="@string/title_activity_artists_album_list" >
+        </activity>
+        <activity
+            android:name="hioa.mappe3.s171183.TrackList"
+            android:label="@string/title_activity_track_list" >
+        </activity>
     </application>
 
 </manifest>

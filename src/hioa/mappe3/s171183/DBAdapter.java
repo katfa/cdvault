@@ -22,8 +22,8 @@ public class DBAdapter extends SQLiteOpenHelper {
 			TRACK_TABLE = "track", TRACK_NUMBER = "track_number",
 			ALBUM_ID = "album_id", ID = BaseColumns._ID;
 
-	private static final String DB_NAME = "cdvault.db";
-	private static final int DB_VERSION = 2;
+	private static final String DB_NAME = "cdvaultdata.db";
+	private static final int DB_VERSION = 5;
 
 	public DBAdapter(Context context, String databaseName,
 			CursorFactory factory, int databaseVersion) {
@@ -48,7 +48,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 		String createAlbumTable = "create table " + ALBUM_TABLE + "(" + ID
 				+ " integer primary key autoincrement, " + TITLE + " text, "
-				+ YEAR + " text, " + ALBUM_ART + " text, " + ARTIST_ID
+				+ YEAR + " text, " + ALBUM_ART + " blob, " + ARTIST_ID
 				+ " integer, " + "FOREIGN KEY(" + ARTIST_ID + ") REFERENCES "
 				+ ARTIST_TABLE + "(" + ID + "));";
 
@@ -100,6 +100,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 			}
 		}
 
+		cursor.close();
 		return allArtists;
 	}
 
@@ -179,7 +180,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 				String title = cursor.getString(cursor.getColumnIndex(TITLE));
 				String year = cursor.getString(cursor.getColumnIndex(YEAR));
 				int artistID = cursor.getInt(cursor.getColumnIndex(ARTIST_ID));
-				String thumb = cursor.getString(cursor
+				byte[] thumb = cursor.getBlob(cursor
 						.getColumnIndex(ALBUM_ART));
 
 				Album a = new Album(id, title, year, thumb, artistID);
@@ -196,7 +197,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 		values.put(TITLE, album.getTitle());
 		values.put(YEAR, album.getYear());
-		values.put(ALBUM_ART, album.getAlbumArtPath());
+		values.put(ALBUM_ART, album.getAlbumArt());
 		values.put(ARTIST_ID, album.getArtistId());
 
 		dbWritable.insert(ALBUM_TABLE, null, values);
@@ -234,6 +235,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 
 	public ArrayList<Album> getAlbumsByArtist(int artistId) {
+		Log.d("Database", "Getting all albums with artist id " + artistId);
 		ArrayList<Album> albums = new ArrayList<Album>();
 		Cursor cursor = dbReadable.query(ALBUM_TABLE, new String[] { ID, TITLE,
 				ALBUM_ART, YEAR, ARTIST_ID }, ARTIST_ID + "=?",
@@ -244,11 +246,12 @@ public class DBAdapter extends SQLiteOpenHelper {
 			while (cursor.isAfterLast() == false) {
 				int id = cursor.getInt(cursor.getColumnIndex(ID));
 				String title = cursor.getString(cursor.getColumnIndex(TITLE));
-				String thumb = cursor.getString(cursor
+				byte[] thumb = cursor.getBlob(cursor
 						.getColumnIndex(ALBUM_ART));
 				String year = cursor.getString(cursor.getColumnIndex(YEAR));
 
 				albums.add(new Album(id, title, year, thumb, artistId));
+				cursor.moveToNext();
 			}
 		}
 		cursor.close();
@@ -291,5 +294,27 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 		dbWritable.insert(TRACK_TABLE, null, values);
 		Log.d(TAG, track.getTitle() + " added to database.");
+	}
+	
+	public ArrayList<Track> getTracks(int albumId){
+		ArrayList<Track> tracks = new ArrayList<Track>();
+		Cursor cursor = dbReadable.query(TRACK_TABLE, new String[] { ID, TRACK_NUMBER, TITLE }, 
+				ALBUM_ID + "=?",
+				new String[] { String.valueOf(albumId) }, null, null, null,
+				null);
+
+		if (cursor.moveToFirst()) {
+			while (cursor.isAfterLast() == false) {
+				int id = cursor.getInt(cursor.getColumnIndex(ID));
+				String title = cursor.getString(cursor.getColumnIndex(TITLE));
+				String trackNumber = cursor.getString(cursor.getColumnIndex(TRACK_NUMBER));
+				
+				tracks.add(new Track(id, trackNumber, title, albumId));
+				cursor.moveToNext();
+			}
+		}
+		cursor.close();
+		return tracks;
+		
 	}
 }

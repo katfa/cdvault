@@ -1,5 +1,8 @@
 package hioa.mappe3.s171183;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -10,6 +13,10 @@ import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +34,7 @@ import android.widget.Toast;
 public class SearchAndScanFragment extends Fragment {
 	private HashMap<String, String> results = new HashMap<String, String>();
 	private Drawable albumArt;
+	private byte[] albumArtBytes;
 	private ArrayList<TreeMap<?, String>> albumDetails = new ArrayList<TreeMap<?, String>>();
 
 	private DBAdapter dbAdapter;
@@ -43,7 +52,7 @@ public class SearchAndScanFragment extends Fragment {
 		thisFragmentView = inflater.inflate(R.layout.search_and_scan,
 				container, false);
 
-		Button startScanner = (Button) thisFragmentView
+		ImageButton startScanner = (ImageButton) thisFragmentView
 				.findViewById(R.id.startScanner);
 		startScanner.setOnClickListener(new OnClickListener() {
 
@@ -110,7 +119,7 @@ public class SearchAndScanFragment extends Fragment {
 				}
 
 				Album album = new Album(details.get("Album Title"), details
-						.get("Year"), results.get("Album Art"), dbAdapter
+						.get("Year"), albumArtBytes, dbAdapter
 						.getArtistId(artist));
 
 				if (dbAdapter.albumExists(album)) {
@@ -143,7 +152,19 @@ public class SearchAndScanFragment extends Fragment {
 
 	private Drawable fetchAlbumArt(String url) throws InterruptedException,
 			ExecutionException {
-		return MusicManager.getAlbumThumb(url);
+		albumArtBytes =  MusicManager.getAlbumThumb(url); 
+		
+		InputStream inputStream = new ByteArrayInputStream(albumArtBytes);
+		albumArt = Drawable.createFromStream(inputStream, "albumThumb");
+		
+		// make album art ready to be saved to database
+		ByteArrayOutputStream output =  new ByteArrayOutputStream();
+		Bitmap image = BitmapFactory.decodeByteArray(albumArtBytes, 0, albumArtBytes.length);
+		
+		image.compress(CompressFormat.JPEG, 100, output);
+		albumArtBytes = output.toByteArray();
+	
+		return albumArt;
 	}
 
 	@SuppressLint("NewApi")

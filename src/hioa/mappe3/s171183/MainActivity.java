@@ -34,6 +34,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	albumListFragment = new AlbumListFragment();
 
     	searchAndScanFragment.setArtistFragment(artistFragment);
+    	artistFragment.setAlbumListFragment(albumListFragment);
 		
 		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		
