@@ -3,9 +3,13 @@ package hioa.mappe3.s171183;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +40,19 @@ public class ArtistsAlbumList extends Activity {
 		
 		ListView albumList = (ListView) findViewById(R.id.artistsAlbums);
 		albumList.setAdapter(listAdapter);
+		
+		albumList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view, int position,
+					long arg3) {
+
+				Intent intent = new Intent(getBaseContext(), TrackList.class);
+				intent.putExtra("album", (Album)view.getTag());
+				startActivity(intent);
+			}
+		
+		});
 	}
 
 	@Override
