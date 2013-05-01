@@ -10,6 +10,8 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -53,6 +55,14 @@
         <activity
             android:name="hioa.mappe3.s171183.TrackList"
             android:label="@string/title_activity_track_list" >
+        </activity>
+        <activity
+            android:name="hioa.mappe3.s171183.LocationPicker"
+            android:label="@string/title_activity_location_picker" >
+        </activity>
+        <activity
+            android:name="hioa.mappe3.s171183.ConcertsByArtist"
+            android:label="@string/title_activity_concerts_by_artist" >
         </activity>
     </application>
 

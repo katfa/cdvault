@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
@@ -12,11 +13,11 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +26,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,6 +67,33 @@ public class SearchAndScanFragment extends Fragment {
 				startActivityForResult(intent, 0);
 			}
 		});
+		
+		ImageButton search = (ImageButton) thisFragmentView.findViewById(R.id.searchButton);
+		search.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				EditText input = (EditText) getActivity().findViewById(R.id.albumCheckInput);
+				if(albumExists(input.toString().toLowerCase(Locale.getDefault()))) {
+					Toast.makeText(getActivity().getBaseContext(), "You already have this album.", Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(getActivity().getBaseContext(), "You do not have this album yet.", Toast.LENGTH_LONG).show();
+				}
+				InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+					      Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			}
+			
+			private boolean albumExists(String albumTitle){
+				ArrayList<Album> albums = dbAdapter.getAllAlbums();
+				for(Album a : albums){
+					String lowerCaseTitle = a.getTitle().toLowerCase(Locale.getDefault());
+					System.out.println("titles are " + lowerCaseTitle + " and " + albumTitle);
+					if(lowerCaseTitle.equals(albumTitle)) return true;
+				}
+				return false;
+			}
+		});
 
 		getActivity().getActionBar().setTitle("Search or Scan");
 		
@@ -84,7 +114,7 @@ public class SearchAndScanFragment extends Fragment {
 				String upcCode = intent.getStringExtra("SCAN_RESULT");
 				Log.d("UPCCODE", upcCode);
 				try {
-					results = MusicManager.searchByUPC(upcCode);
+					results = AlbumDetailsManager.searchByUPC(upcCode);
 					setAlbumArt(fetchAlbumArt(results.get("Album Art")));
 					fetchAlbumDetails(results.get("resourceURL"));
 					showAlbumDetails(albumDetails.get(0));
@@ -152,7 +182,7 @@ public class SearchAndScanFragment extends Fragment {
 
 	private Drawable fetchAlbumArt(String url) throws InterruptedException,
 			ExecutionException {
-		albumArtBytes =  MusicManager.getAlbumThumb(url); 
+		albumArtBytes =  AlbumDetailsManager.getAlbumThumb(url); 
 		
 		InputStream inputStream = new ByteArrayInputStream(albumArtBytes);
 		albumArt = Drawable.createFromStream(inputStream, "albumThumb");
@@ -176,7 +206,7 @@ public class SearchAndScanFragment extends Fragment {
 
 	private void fetchAlbumDetails(String url) throws InterruptedException,
 			ExecutionException {
-		albumDetails = MusicManager.getAlbumDetails(url);
+		albumDetails = AlbumDetailsManager.getAlbumDetails(url);
 	}
 
 	public void showAlbumDetails(TreeMap<?, String> treeMap) {

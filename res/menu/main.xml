@@ -6,10 +6,11 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/refresh"/>
+    
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/setLocation"
         android:orderInCategory="200"
         android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:title="@string/set_location"/>
 
 </menu>

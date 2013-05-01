@@ -1,13 +1,12 @@
 package hioa.mappe3.s171183;
 
-import hioa.mappe3.s171183.ArtistFragment.ArtistAdapter;
-import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +21,11 @@ public class EditArtist extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_artist);
-
+		
+		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Thin.ttf");
+		TextView title = (TextView) findViewById(R.id.editArtistTitle);
+		title.setTypeface(tf);
+		
 		dbAdapter = new DBAdapter(getBaseContext());
 		artist = (Artist) getIntent().getSerializableExtra("artist");
 		artistName = (TextView)findViewById(R.id.artistName);

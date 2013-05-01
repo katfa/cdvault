@@ -1,8 +1,6 @@
 package hioa.mappe3.s171183;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -19,34 +17,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
 /**
- *  This class uses both discogs and last.fm, hence the semi-repetitive methods.
+ *  This class uses discogs to get album information.
  * 	@author kat
  *
  */
-public class MusicManager {
+public class AlbumDetailsManager {
 	
 	private static final String UPC_SEARCH =  "http://api.discogs.com/database/search?q=";
-	private static final String LASTFM_API_KEY = "5c8eba7251df40a7f941aa51d2b9a8dc";
-	private static final String LASTFM_SEARCH = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=" + LASTFM_API_KEY; 
-	private static final String LASTFM_ARTIST_QUERY ="&artist=";
-	private static final String LASTFM_ALBUM_QUERY = "&album=";
-	private static final String LASTFM_FORMAT = "&format=json";
-	
     private static final String CALLBACK = "&callback=";
 	
 	public static HashMap<String,String> searchByUPC(String upcCode) throws InterruptedException, ExecutionException, JSONException {
 		HashMap<String, String> results = new HashMap<String, String>();
 		String result = new GetResultsByUPC().execute(UPC_SEARCH + upcCode + CALLBACK).get();
 		JSONObject json = new JSONObject(result);
-		Log.d("API", "jsonobject " + json);
 		JSONArray resultArray = json.getJSONArray("results");
 		
 		// some UPCs do not include last digit
@@ -61,7 +48,6 @@ public class MusicManager {
 		results.put("Album Art", thumbnailPath);
 		
 		String resourceURL = resultObject.getString("resource_url");
-		Log.d("API", resourceURL);
 		results.put("resourceURL", resourceURL);
 		
 		return results;	
@@ -81,7 +67,9 @@ public class MusicManager {
 		return new GetAlbumDetails().execute(url).get();
 	}
 
+	
 	/* --- ASYNC TASKS --- */
+
 	private static class GetResultsByUPC extends AsyncTask<String, String, String>{
 
 		@Override
@@ -108,7 +96,6 @@ public class MusicManager {
 	}
 	
 	private static class GetAlbumThumb extends AsyncTask<String,String,byte[]>{
-		@SuppressWarnings("deprecation")
 		@Override
 		protected byte[] doInBackground(String... urls){
 			URL url;        

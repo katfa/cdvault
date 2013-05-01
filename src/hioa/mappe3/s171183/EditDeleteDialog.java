@@ -21,7 +21,8 @@ public class EditDeleteDialog extends DialogFragment {
 	private AlbumListFragment albumListFragment;
 
 	private final String EDIT = "Edit", DELETE = "Delete",
-			VIEW_ALBUMS = "View Albums", VIEW_TRACKS = "View Tracks";
+			VIEW_ALBUMS = "View Albums", VIEW_TRACKS = "View Tracks",
+			VIEW_CONCERTS = "View concerts in my city";
 
 	public EditDeleteDialog() {
 	}
@@ -47,6 +48,7 @@ public class EditDeleteDialog extends DialogFragment {
 			final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
 					artistFragment.getActivity(),
 					android.R.layout.select_dialog_item);
+			arrayAdapter.add(VIEW_CONCERTS);
 			arrayAdapter.add(VIEW_ALBUMS);
 			arrayAdapter.add(EDIT);
 			arrayAdapter.add(DELETE);
@@ -63,6 +65,12 @@ public class EditDeleteDialog extends DialogFragment {
 
 				@Override
 				public void onClick(DialogInterface dialog, int arg1) {
+					if(arrayAdapter.getItem(arg1).equals(VIEW_CONCERTS)){
+						Intent intent = new Intent(getActivity(), ConcertsByArtist.class);
+						intent.putExtra("artist", artist);
+						startActivity(intent);
+					}
+					
 					if (arrayAdapter.getItem(arg1).equals(VIEW_ALBUMS)) {
 						Intent intent = new Intent(getActivity(),
 								ArtistsAlbumList.class);

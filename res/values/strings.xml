@@ -12,10 +12,16 @@
     <string name="artist_name">Artist Name:</string>
     <string name="update">Update</string>
     <string name="save">Save to collection</string>
-    <string name="title_activity_artists_album_list">ArtistsAlbumList</string>
+    <string name="title_activity_artists_album_list">Artist</string>
     <string name="scan_label">Scan CD barcode</string>
     <string name="scanner_icon_descripton">Scanner button</string>
     <string name="title_activity_track_list">TrackList</string>
-    <string name="hello_world">Hello world!</string>
-
+    <string name="set_location">Set Location</string>
+    <string name="title_activity_location_picker">Location</string>
+	<string name="pick_location">Pick your location</string>
+	<string name="title_activity_concerts_by_artist">Concerts by artist</string>
+	<string name="album_check_label">Do I have this album?</string>
+	<string name="search_icon_descripton">Search icon</string>
+	<string name="album_art_descripton">Album art</string>
+	<string name="enter_album_title">Enter album title</string>
 </resources>
