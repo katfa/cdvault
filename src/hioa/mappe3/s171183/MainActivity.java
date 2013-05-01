@@ -27,11 +27,14 @@ public class MainActivity extends FragmentActivity implements
 	private AlbumListFragment albumListFragment;
 	private ArtistFragment artistFragment;
 	private ConcertByCityFragment concertByCityFragment;
+	
+	private FragmentManager fManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		fManager = this.getSupportFragmentManager();
 
 		searchAndScanFragment = new SearchAndScanFragment();
 		artistFragment = new ArtistFragment();
@@ -88,6 +91,11 @@ public class MainActivity extends FragmentActivity implements
 
 		case R.id.setLocation:
 			startActivity(new Intent(this, LocationPicker.class));
+			return false;
+		
+		case R.id.aboutApp:
+			AboutDialog aboutDialog = new AboutDialog();
+			aboutDialog.show(fManager, "aboutDialog");
 			return false;
 		}
 		return false;

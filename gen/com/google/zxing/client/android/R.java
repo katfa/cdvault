@@ -33,27 +33,27 @@ public final class R {
 		public static final int share_clipboard_button = 0x7f090047;
 		public static final int help_contents = 0x7f090031;
 		public static final int decode_failed = 0x7f090001;
-		public static final int menu_history_send = 0x7f090051;
+		public static final int menu_history_send = 0x7f090050;
 		public static final int share_app_button = 0x7f090044;
 		public static final int format_text_view = 0x7f090021;
 		public static final int contents_supplement_text_view = 0x7f090027;
-		public static final int menu_share = 0x7f09004c;
+		public static final int menu_share = 0x7f09004b;
 		public static final int decode_succeeded = 0x7f090002;
 		public static final int time_text_view = 0x7f090023;
-		public static final int menu_history_clear_text = 0x7f090052;
+		public static final int menu_history_clear_text = 0x7f090051;
 		public static final int back_button = 0x7f090032;
-		public static final int menu_help = 0x7f09004f;
+		public static final int menu_help = 0x7f09004e;
 		public static final int query_button = 0x7f090040;
 		public static final int preview_view = 0x7f09001d;
-		public static final int menu_encode = 0x7f090050;
+		public static final int menu_encode = 0x7f09004f;
 		public static final int image_view = 0x7f090030;
 		public static final int viewfinder_view = 0x7f09001e;
 		public static final int result_button_view = 0x7f090028;
 		public static final int decode = 0x7f090000;
 		public static final int snippet_view = 0x7f090043;
 		public static final int share_text_view = 0x7f090048;
-		public static final int menu_settings = 0x7f09004e;
-		public static final int menu_history = 0x7f09004d;
+		public static final int menu_settings = 0x7f09004d;
+		public static final int menu_history = 0x7f09004c;
 		public static final int shopper_button = 0x7f090029;
 		public static final int page_number_view = 0x7f090042;
 		public static final int bookmark_title = 0x7f09001b;
@@ -195,9 +195,9 @@ public final class R {
 		public static final int button_sms = 0x7f0a001a;
 	}
 	public static final class menu {
-		public static final int history = 0x7f0c0004;
-		public static final int capture = 0x7f0c0001;
-		public static final int encode = 0x7f0c0003;
+		public static final int history = 0x7f0c0002;
+		public static final int capture = 0x7f0c0000;
+		public static final int encode = 0x7f0c0001;
 	}
 	public static final class layout {
 		public static final int bookmark_picker_list_item = 0x7f03000a;

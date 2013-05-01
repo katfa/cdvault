@@ -40,7 +40,10 @@
             android:layout_marginTop="12dp"
             android:text="@string/album_check_label"
             android:textColor="@color/dark_grey"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:focusable="true" 
+    		android:focusableInTouchMode="true" 
+    		android:descendantFocusability="beforeDescendants"/>
 
         <EditText
             android:id="@+id/albumCheckInput"
@@ -48,9 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/albumCheckLabel"
             android:layout_centerHorizontal="true"
-            android:inputType="text"
             android:hint="@string/enter_album_title"
-            android:textSize="12sp" />
+            android:inputType="text"
+            android:textSize="14sp" />
 
         <ImageButton
             android:id="@+id/searchButton"
@@ -66,8 +69,8 @@
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/albumCheckInput"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:background="@color/light_blue" />
 
         <TextView

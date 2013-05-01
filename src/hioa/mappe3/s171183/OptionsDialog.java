@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 @SuppressLint("ValidFragment")
-public class EditDeleteDialog extends DialogFragment {
+public class OptionsDialog extends DialogFragment {
 	private Artist artist;
 	private ArtistFragment artistFragment;
 	private Album album;
@@ -24,17 +24,17 @@ public class EditDeleteDialog extends DialogFragment {
 			VIEW_ALBUMS = "View Albums", VIEW_TRACKS = "View Tracks",
 			VIEW_CONCERTS = "View concerts in my city";
 
-	public EditDeleteDialog() {
+	public OptionsDialog() {
 	}
 
-	public EditDeleteDialog(Artist artist, ArtistFragment artistFragment,
+	public OptionsDialog(Artist artist, ArtistFragment artistFragment,
 			AlbumListFragment albumListFragment) {
 		this.artist = artist;
 		this.artistFragment = artistFragment;
 		this.albumListFragment = albumListFragment;
 	}
 
-	public EditDeleteDialog(Album album, AlbumListFragment albumListFragment) {
+	public OptionsDialog(Album album, AlbumListFragment albumListFragment) {
 		this.album = album;
 		this.albumListFragment = albumListFragment;
 	}
@@ -124,7 +124,6 @@ public class EditDeleteDialog extends DialogFragment {
 					albumListFragment.getActivity(),
 					android.R.layout.select_dialog_item);
 			arrayAdapter.add(VIEW_TRACKS);
-			arrayAdapter.add(EDIT);
 			arrayAdapter.add(DELETE);
 
 			builder.setNegativeButton("Cancel", new OnClickListener() {
@@ -144,7 +143,14 @@ public class EditDeleteDialog extends DialogFragment {
 								TrackList.class);
 						intent.putExtra("album", album);
 						startActivity(intent);
-					};
+					}
+					
+					if(arrayAdapter.getItem(arg1).equals(DELETE)){
+						DBAdapter db = albumListFragment.getDbAdapter();
+						db.deleteAlbum(album.getId());
+						albumListFragment.getAlbumListAdapter().remove(album);
+						albumListFragment.updateList(db.getAllAlbums());
+					}
 				}
 			});
 

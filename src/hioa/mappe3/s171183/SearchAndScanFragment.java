@@ -44,6 +44,8 @@ public class SearchAndScanFragment extends Fragment {
 	private View thisFragmentView;
 	
 	private ArtistFragment artistFragment;
+	private EditText albumInput;
+	private InputMethodManager inputManager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,20 +70,25 @@ public class SearchAndScanFragment extends Fragment {
 			}
 		});
 		
+		albumInput = (EditText) thisFragmentView.findViewById(R.id.albumCheckInput);
+		
+		inputManager = (InputMethodManager)thisFragmentView.getContext().getSystemService(
+			      Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(thisFragmentView.getWindowToken(), 0);
+		
 		ImageButton search = (ImageButton) thisFragmentView.findViewById(R.id.searchButton);
 		search.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				EditText input = (EditText) getActivity().findViewById(R.id.albumCheckInput);
-				if(albumExists(input.toString().toLowerCase(Locale.getDefault()))) {
+				
+				if(albumExists(albumInput.getText().toString().toLowerCase(Locale.getDefault()))) {
 					Toast.makeText(getActivity().getBaseContext(), "You already have this album.", Toast.LENGTH_LONG).show();
 				} else {
 					Toast.makeText(getActivity().getBaseContext(), "You do not have this album yet.", Toast.LENGTH_LONG).show();
 				}
-				InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
-					      Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+				inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+				albumInput.setText("");
 			}
 			
 			private boolean albumExists(String albumTitle){
@@ -174,12 +181,24 @@ public class SearchAndScanFragment extends Fragment {
 
 				}
 				
+				clearResults();
 				artistFragment.updateList(dbAdapter.getAllArtists());
 				
 			}
 		});
 	}
 
+	private void clearResults(){
+		ImageView albumArt = (ImageView) thisFragmentView
+				.findViewById(R.id.albumArt);
+		albumArt.setVisibility(View.GONE);
+		TextView details = (TextView) thisFragmentView.findViewById(R.id.album);
+		details.setVisibility(View.GONE);
+		TextView tracks = (TextView) thisFragmentView.findViewById(R.id.tracks);
+		tracks.setVisibility(View.GONE);
+		
+		
+	}
 	private Drawable fetchAlbumArt(String url) throws InterruptedException,
 			ExecutionException {
 		albumArtBytes =  AlbumDetailsManager.getAlbumThumb(url); 
@@ -202,6 +221,7 @@ public class SearchAndScanFragment extends Fragment {
 		ImageView albumArt = (ImageView) thisFragmentView
 				.findViewById(R.id.albumArt);
 		albumArt.setBackground(drawable);
+		albumArt.setVisibility(View.VISIBLE);
 	}
 
 	private void fetchAlbumDetails(String url) throws InterruptedException,
@@ -217,6 +237,7 @@ public class SearchAndScanFragment extends Fragment {
 		}
 
 		t.setText(info);
+		t.setVisibility(View.VISIBLE);
 	}
 
 	public void showTracks(TreeMap<?, String> tracks) {
@@ -227,6 +248,7 @@ public class SearchAndScanFragment extends Fragment {
 		}
 
 		t.setText(trackList);
+		t.setVisibility(View.VISIBLE);
 	}
 
 }

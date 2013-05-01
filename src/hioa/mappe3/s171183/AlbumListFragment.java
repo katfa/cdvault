@@ -44,7 +44,7 @@ public class AlbumListFragment extends Fragment{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				
-					EditDeleteDialog dialog = new EditDeleteDialog((Album)view.getTag(), AlbumListFragment.this);
+					OptionsDialog dialog = new OptionsDialog((Album)view.getTag(), AlbumListFragment.this);
 					dialog.show(fManager, "editDeleteDialog");
 			}
 		});
@@ -59,5 +59,9 @@ public class AlbumListFragment extends Fragment{
 	
 	public AlbumListAdapter getAlbumListAdapter(){
 		return this.albumListAdapter;
+	}
+	
+	public DBAdapter getDbAdapter(){
+		return this.dbAdapter;
 	}
 }

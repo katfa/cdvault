@@ -60,7 +60,7 @@ public final class R {
         public static final int shopper_icon=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f09004b;
+        public static final int aboutApp=0x7f090054;
         public static final int album=0x7f09003b;
         public static final int albumArt=0x7f09003c;
         public static final int albumCheckInput=0x7f090039;
@@ -102,13 +102,13 @@ public final class R {
         public static final int launch_product_query=0x7f090003;
         public static final int locationList=0x7f090011;
         public static final int locationTitle=0x7f090010;
-        public static final int menu_encode=0x7f090050;
-        public static final int menu_help=0x7f09004f;
-        public static final int menu_history=0x7f09004d;
-        public static final int menu_history_clear_text=0x7f090052;
-        public static final int menu_history_send=0x7f090051;
-        public static final int menu_settings=0x7f09004e;
-        public static final int menu_share=0x7f09004c;
+        public static final int menu_encode=0x7f09004f;
+        public static final int menu_help=0x7f09004e;
+        public static final int menu_history=0x7f09004c;
+        public static final int menu_history_clear_text=0x7f090051;
+        public static final int menu_history_send=0x7f090050;
+        public static final int menu_settings=0x7f09004d;
+        public static final int menu_share=0x7f09004b;
         public static final int meta_text_view=0x7f090025;
         public static final int meta_text_view_label=0x7f090024;
         public static final int nameLabel=0x7f09000d;
@@ -118,7 +118,7 @@ public final class R {
         public static final int query_button=0x7f090040;
         public static final int query_text_view=0x7f09003f;
         public static final int quit=0x7f090004;
-        public static final int refresh=0x7f090053;
+        public static final int refresh=0x7f090052;
         public static final int restart_preview=0x7f090005;
         public static final int result_button_view=0x7f090028;
         public static final int result_list_view=0x7f090041;
@@ -127,7 +127,7 @@ public final class R {
         public static final int saveAlbum=0x7f09003e;
         public static final int scanLabel=0x7f090036;
         public static final int searchButton=0x7f09003a;
-        public static final int setLocation=0x7f090054;
+        public static final int setLocation=0x7f090053;
         public static final int share_app_button=0x7f090044;
         public static final int share_bookmark_button=0x7f090045;
         public static final int share_clipboard_button=0x7f090047;
@@ -173,19 +173,17 @@ public final class R {
         public static final int track_list_row=0x7f030017;
     }
     public static final class menu {
-        public static final int artists_album_list=0x7f0c0000;
-        public static final int capture=0x7f0c0001;
-        public static final int edit_artist=0x7f0c0002;
-        public static final int encode=0x7f0c0003;
-        public static final int history=0x7f0c0004;
-        public static final int location_picker=0x7f0c0005;
-        public static final int main=0x7f0c0006;
-        public static final int track_list=0x7f0c0007;
+        public static final int capture=0x7f0c0000;
+        public static final int encode=0x7f0c0001;
+        public static final int history=0x7f0c0002;
+        public static final int main=0x7f0c0003;
     }
     public static final class raw {
         public static final int beep=0x7f050000;
     }
     public static final class string {
+        public static final int about_content=0x7f0a0090;
+        public static final int about_this_app=0x7f0a008f;
         public static final int action_settings=0x7f0a0079;
         public static final int album_art_descripton=0x7f0a008d;
         public static final int album_check_label=0x7f0a008b;

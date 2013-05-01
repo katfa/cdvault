@@ -32,6 +32,8 @@ public class ConcertManager {
 	private static final String GET_CONCERTS = "http://api.songkick.com/api/3.0/metro_areas/";
 	private static final String GET_ARTIST_SONGKICK_ID = "http://api.songkick.com/api/3.0/search/artists.json?query=";
 	private static final String FORMAT = "/calendar.json?";
+	private static final String PAGE = "&page=";
+	private static final int NUMBER_OF_PAGES = 5;
 
 	public static HashMap<String, String> getLocationSuggestions(
 			double latitude, double longitude) throws InterruptedException,
@@ -65,46 +67,51 @@ public class ConcertManager {
 	public static ArrayList<Concert> getConcertsInCity(String metroId)
 			throws InterruptedException, ExecutionException {
 		ArrayList<Concert> concerts = new ArrayList<Concert>();
-		String result = new GetJSONObject().execute(
-				GET_CONCERTS + metroId + FORMAT + SONGKICK_KEY).get();
+		
+		for(int p = 0; p < NUMBER_OF_PAGES; p++){
+			String result = new GetJSONObject().execute(
+					GET_CONCERTS + metroId + FORMAT + PAGE + p + SONGKICK_KEY).get();
 
-		try {
-			JSONObject jObject = new JSONObject(result).getJSONObject(
-					"resultsPage").getJSONObject("results");
-			JSONArray eventArray = jObject.getJSONArray("event");
+			try {
+				JSONObject jObject = new JSONObject(result).getJSONObject(
+						"resultsPage").getJSONObject("results");
+				JSONArray eventArray = jObject.getJSONArray("event");
 
-			for (int i = 0; i < eventArray.length(); i++) {
-				JSONObject eventObject = eventArray.getJSONObject(i);
-				if (eventObject.getString("type").equals("Concert")) {
-					JSONArray performances = eventObject
-							.getJSONArray("performance");
+				for (int i = 0; i < eventArray.length(); i++) {
+					JSONObject eventObject = eventArray.getJSONObject(i);
+					if (eventObject.getString("type").equals("Concert")) {
+						JSONArray performances = eventObject
+								.getJSONArray("performance");
 
-					String venueId = eventObject.getJSONObject("venue")
-							.getJSONObject("metroArea").getString("id");
-					if (venueId.equals(metroId)) {
+						String venueId = eventObject.getJSONObject("venue")
+								.getJSONObject("metroArea").getString("id");
+						if (venueId.equals(metroId)) {
 
-						String venue = eventObject.getJSONObject("venue")
-								.getString("displayName");
-						String time = eventObject.getJSONObject("start")
-								.getString("time");
-						String date = eventObject.getJSONObject("start")
-								.getString("date");
-
-						for (int j = 0; j < performances.length(); j++) {
-							String artist = performances.getJSONObject(j)
-									.getJSONObject("artist")
+							String venue = eventObject.getJSONObject("venue")
 									.getString("displayName");
-							concerts.add(new Concert(venue, artist, time, date));
+							String time = eventObject.getJSONObject("start")
+									.getString("time");
+							String date = eventObject.getJSONObject("start")
+									.getString("date");
+
+							for (int j = 0; j < performances.length(); j++) {
+								String artist = performances.getJSONObject(j)
+										.getJSONObject("artist")
+										.getString("displayName");
+								concerts.add(new Concert(venue, artist, time, date));
+							}
 						}
 					}
 				}
+
+			} catch (JSONException e) {
+				Log.e("ERROR",
+						"JSON error when getting concerts. " + e.getMessage());
 			}
 
-		} catch (JSONException e) {
-			Log.e("ERROR",
-					"JSON error when getting concerts. " + e.getMessage());
+			
 		}
-
+		
 		return concerts;
 	}
 

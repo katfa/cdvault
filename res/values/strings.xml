@@ -24,4 +24,9 @@
 	<string name="search_icon_descripton">Search icon</string>
 	<string name="album_art_descripton">Album art</string>
 	<string name="enter_album_title">Enter album title</string>
+	<string name="about_this_app">About this app</string>
+	<string name="about_content">This app is to help you keep track of which albums you already own. Scan your CD barcode to save the album to your personal database.
+	    \n\nIn addition, you can check out if any of the artists you listen to are coming to your town!
+	    \n\nAlbum information is taken from www.discogs.com.
+	    \n\nConcert information is taken from www.songkick.com</string>
 </resources>

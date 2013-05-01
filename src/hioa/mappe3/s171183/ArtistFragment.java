@@ -56,7 +56,7 @@ public class ArtistFragment extends Fragment{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				EditDeleteDialog dialog = new EditDeleteDialog((Artist) view
+				OptionsDialog dialog = new OptionsDialog((Artist) view
 						.getTag(), ArtistFragment.this, albumListFragment);
 				dialog.show(fManager, "EditDeleteDialog");
 			}

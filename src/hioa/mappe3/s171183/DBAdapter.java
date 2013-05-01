@@ -86,7 +86,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	public ArrayList<Artist> getAllArtists() {
 		ArrayList<Artist> allArtists = new ArrayList<Artist>();
-		String selectQuery = "select * from " + ARTIST_TABLE;
+		String selectQuery = "select * from " + ARTIST_TABLE + " order by " + NAME;
 
 		Cursor cursor = dbReadable.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
@@ -171,7 +171,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	public ArrayList<Album> getAllAlbums() {
 		ArrayList<Album> allAlbums = new ArrayList<Album>();
-		String selectQuery = "select * from " + ALBUM_TABLE;
+		String selectQuery = "select * from " + ALBUM_TABLE + " order by " + ARTIST_ID;
 
 		Cursor cursor = dbReadable.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
