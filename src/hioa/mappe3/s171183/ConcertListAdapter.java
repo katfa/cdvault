@@ -49,7 +49,12 @@ public class ConcertListAdapter extends ArrayAdapter<Concert> {
 			
 			TextView concertTime = (TextView) row.findViewById(R.id.concertTime);
 			concertTime.setTypeface(tf);
-			concertTime.setText(concerts.get(position).getTime());
+			
+			if(concerts.get(position).getTime().equals("null")){
+				concertTime.setText("TBA");
+			} else { 
+				concertTime.setText(concerts.get(position).getTime());
+			}
 			
 			return row;
 			
@@ -58,6 +63,11 @@ public class ConcertListAdapter extends ArrayAdapter<Concert> {
 		@Override
 		public int getCount(){
 			return concerts.size();
+		}
+		
+		public void updateConcerts(ArrayList<Concert> concerts){
+			this.concerts = concerts;
+			this.notifyDataSetChanged();
 		}
 		
 	}

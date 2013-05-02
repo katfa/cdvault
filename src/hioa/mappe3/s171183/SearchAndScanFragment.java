@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,7 +118,8 @@ public class SearchAndScanFragment extends Fragment {
 
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (requestCode == 0) {
-			if (resultCode == getActivity().RESULT_OK) {
+			getActivity();
+			if (resultCode == FragmentActivity.RESULT_OK) {
 				String upcCode = intent.getStringExtra("SCAN_RESULT");
 				Log.d("UPCCODE", upcCode);
 				try {

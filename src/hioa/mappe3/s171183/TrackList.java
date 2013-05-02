@@ -42,13 +42,15 @@ public class TrackList extends Activity {
 		listAdapter = new TrackListAdapter(getBaseContext(),
 				R.layout.track_list_row, tracks);
 		ListView trackView = (ListView) findViewById(R.id.trackList);
+		trackView.setSelector(android.R.color.transparent);
 		trackView.setAdapter(listAdapter);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		menu.findItem(R.id.refresh).setVisible(false);
+
 		return true;
 	}
 

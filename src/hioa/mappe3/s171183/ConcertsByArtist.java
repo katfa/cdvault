@@ -45,6 +45,7 @@ public class ConcertsByArtist extends Activity {
 			ConcertListAdapter concertListAdapter = new ConcertListAdapter(getBaseContext(), R.layout.concert_row_layout, concerts);
 			
 			ListView concertsList = (ListView) findViewById(R.id.artistsConcerts);
+			concertsList.setSelector(android.R.color.transparent);
 			concertsList.setAdapter(concertListAdapter);
 		}
 

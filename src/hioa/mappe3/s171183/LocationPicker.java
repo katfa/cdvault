@@ -1,9 +1,9 @@
 package hioa.mappe3.s171183;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
@@ -37,7 +37,6 @@ public class LocationPicker extends Activity {
 	private int distance = 0;
 
 	private double latitude, longitude;
-	private String errorMessage;
 	
 
 	@Override
@@ -56,8 +55,9 @@ public class LocationPicker extends Activity {
 			if (latitude != 0.0 || longitude != 0.0)
 				disableGPS();
 			
-			HashMap<String, String> locationSuggestions = ConcertManager
+			TreeMap<String, String> locationSuggestions = ConcertManager
 					.getLocationSuggestions(latitude, longitude);
+			
 			final ArrayList<String> cities = new ArrayList<String>();
 			final ArrayList<String> metroIds = new ArrayList<String>();
 			
@@ -87,6 +87,9 @@ public class LocationPicker extends Activity {
 					editor.putString("metroId", metroId);
 					editor.putString("city", city);
 					editor.commit();
+					Toast.makeText(getBaseContext(), "Press refresh to update concert list.", Toast.LENGTH_LONG).show();
+					finish();
+					
 				}
 			});
 		
@@ -96,9 +99,6 @@ public class LocationPicker extends Activity {
 			Log.e("ERROR", e.getMessage());
 		}
 
-		
-
-		
 	}
 
 	private void getCoordinates() {
@@ -162,8 +162,9 @@ public class LocationPicker extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		menu.findItem(R.id.refresh).setVisible(false);
+
 		return true;
 	}
 	

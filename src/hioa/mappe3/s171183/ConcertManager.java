@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.io.IOUtils;
@@ -16,9 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -30,15 +28,14 @@ public class ConcertManager {
 	public static final String SONGKICK_KEY = "&apikey=AZlMMENPFsnnHtbQ";
 	public static final String GET_LOCATION = "http://api.songkick.com/api/3.0/search/locations.json?location=geo:";
 	private static final String GET_CONCERTS = "http://api.songkick.com/api/3.0/metro_areas/";
-	private static final String GET_ARTIST_SONGKICK_ID = "http://api.songkick.com/api/3.0/search/artists.json?query=";
 	private static final String FORMAT = "/calendar.json?";
 	private static final String PAGE = "&page=";
 	private static final int NUMBER_OF_PAGES = 5;
 
-	public static HashMap<String, String> getLocationSuggestions(
+	public static TreeMap<String, String> getLocationSuggestions(
 			double latitude, double longitude) throws InterruptedException,
 			ExecutionException {
-		HashMap<String, String> locations = new HashMap<String, String>();
+		TreeMap<String, String> locations = new TreeMap<String, String>();
 		String result = new GetJSONObject().execute(
 				GET_LOCATION + latitude + "," + longitude + SONGKICK_KEY).get();
 		try {

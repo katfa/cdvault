@@ -11,13 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class ConcertByCityFragment extends Fragment {
 	private ArrayList<Concert> concerts = new ArrayList<Concert>();
 	private View thisFragmentView;
+	private ConcertListAdapter concertListAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -35,11 +34,22 @@ public class ConcertByCityFragment extends Fragment {
 				Log.e("ERROR", "getting concerts by city not executed ");
 			}
 			ListView concertList = (ListView) thisFragmentView.findViewById(R.id.concert_list);
-			concertList.setAdapter(new ConcertListAdapter(getActivity().getBaseContext(), R.layout.concert_row_layout_with_artist, concerts));
+			concertListAdapter = new ConcertListAdapter(getActivity().getBaseContext(), R.layout.concert_row_layout_with_artist, concerts);
+			concertList.setAdapter(concertListAdapter);
 			concertList.setSelector(android.R.color.transparent);
 		}
 		
 		return thisFragmentView;
 	}
-
+	
+	public ConcertListAdapter getConcertListAdapter(){
+		return this.concertListAdapter;
+	}
+	
+	public void updateCity(String cityId) throws InterruptedException, ExecutionException{
+		concertListAdapter.clear();
+		concerts = ConcertManager.getConcertsInCity(cityId);
+		concertListAdapter.updateConcerts(concerts);
+		concertListAdapter.notifyDataSetChanged();
+	}
 }
