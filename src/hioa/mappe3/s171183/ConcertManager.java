@@ -65,7 +65,7 @@ public class ConcertManager {
 			throws InterruptedException, ExecutionException {
 		ArrayList<Concert> concerts = new ArrayList<Concert>();
 		
-		for(int p = 0; p < NUMBER_OF_PAGES; p++){
+		for(int p = 1; p <= NUMBER_OF_PAGES; p++){
 			String result = new GetJSONObject().execute(
 					GET_CONCERTS + metroId + FORMAT + PAGE + p + SONGKICK_KEY).get();
 
